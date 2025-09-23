@@ -77,13 +77,3 @@ npm start
 *   `GET /user/connections`: Get accepted connections.
 *   `GET /user/feed`: Get a feed of potential connections.
 
-## Potential Bugs/Improvements
-
-*   **Security Enhancements:**
-    *   Enable `helmet`, `express-mongo-sanitize`, `xss-clean` middlewares in `src/app.js` for enhanced security.
-    *   Ensure CORS configuration is appropriate for production environments.
-*   **Authentication & Authorization:**
-    *   Implement proper role-based access control for `adminAuth` if admin functionality is required.
-    *   Use `401 Unauthorized` status code for token validation failures in `src/middlewares/auth.js`.
-*   **Database Schema:**
-    *   Re-evaluate the necessity of the `userId` field in `src/models/user.js` as MongoDB provides `_id`.
