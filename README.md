@@ -53,13 +53,13 @@ FRONTEND_URL=http://localhost:5173
 
 ### 4. Running the Server
 *   **Development:**
-    ```
+```bash
 npm run dev
-    ```
+```
 *   **Production:**
-    ```
+```bash
 npm start
-    ```
+```
 
 ## API Endpoints (Overview)
 
