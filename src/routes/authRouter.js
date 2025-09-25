@@ -41,8 +41,9 @@ authRouter.post("/login", loginValidator, handleValidationErrors, async (req, re
             // 5.) Add Token to cookie and send the response back to the user. 
             res.cookie("Token", Token, {
                 expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // cookie expires after 7 day
-                httpOnly: true, // → cookie can’t be accessed via JS (document.cookie), safer for JWT.
+                httpOnly: true,
                 secure: true,
+                sameSite: 'none' // Essential for cross-domain cookies
             });
             // res.json({
             //     message: `${userProfile.firstName} you have logged in successfully!`,
@@ -59,8 +60,11 @@ authRouter.post("/login", loginValidator, handleValidationErrors, async (req, re
 
 authRouter.post("/logout", async (req, res) => {
     res.cookie("Token", null, {
-        expires: new Date(Date.now()), // Token exipres now!
-    })
+        expires: new Date(Date.now()),
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+    });
     res.json({ message: "You have loged out"});
 })
 
