@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
-const databaseName = "devTinder";
-const URI = `mongodb+srv://tenlekshe_db_user:YrOvb0AT2XsVXSz0@namastenodejs.uhykrnr.mongodb.net/${databaseName}`;
 
 
 // Connecting to Cluster: "mongoose.connect" returns a promise so wrap inside an async function
 // adding /dbName connects/creates a new Database
 const connectDB = async () => {
-    await mongoose.connect(URI);
+    if (!process.env.DB_URI) {
+        throw new Error("DB_URI is not defined in environment variables.Please check your.env file.");
+    }
+    await mongoose.connect(process.env.DB_URI);
 }
 
 
