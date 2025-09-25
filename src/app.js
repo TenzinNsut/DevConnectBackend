@@ -20,10 +20,30 @@ const userRouter = require("./routes/userRouter");
 
 
 // Middleware
+// app.use(cors({
+//     origin: "http://localhost:5173",
+//     credentials:true
+// })); // Used to resolve CORS error
+
+ // To this (replace with your actual Vercel URL):
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://dev-connect-front-end.vercel.app" // <-- Add 
+];
+
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials:true
-})); // Used to resolve CORS error 
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
+
+
+
 app.use(express.json());           // Parse JSON: Must be applied before
 app.use(cookieParser());           // Tp parse the cookies
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
