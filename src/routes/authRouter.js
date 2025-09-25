@@ -19,7 +19,8 @@ authRouter.post("/signup", signUpValidator, handleValidationErrors,  async (req,
         await user.save({validateBeforeSave:true});
         res.json({message:"User has signed up succesfully" });
     } catch (err) {
-        res.status(400).send("Encounterd issue while saving the data" + err);
+        console.error("Signup Error:", err);
+        res.status(400).json({ message: "Encountered issue while saving the data", error: err.message });
     }
 });
 

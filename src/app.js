@@ -19,6 +19,8 @@ const profileRouter  = require("./routes/profileRouter");
 const userRouter = require("./routes/userRouter");
 
 
+app.set('trust proxy', 1); // Trust the first proxy
+
 // Middleware
 // app.use(cors({
 //     origin: "http://localhost:5173",
