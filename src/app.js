@@ -22,13 +22,19 @@ const userRouter = require("./routes/userRouter");
 app.set('trust proxy', 1); // Trust the first proxy
 
 // Middleware
-// app.use(cors({
-//     origin: "http://localhost:5173",
-//     credentials:true
-// })); // Used to resolve CORS error
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
 
- app.use(cors({
-    origin: process.env.FRONTEND_URL,
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
     credentials: true
 }));
 
