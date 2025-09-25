@@ -27,8 +27,11 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
             $and: [{toUserId: loggedInUser._id, status: "interested"}]
         }).populate("fromUserId", ["firstName", "lastName", "gender", "photoUrl", "about", "skills"])
 
-        // Prevent from sending extra info
-        const safeData = connectionRequests.map((row) => row.fromUserId);
+        // Modify safeData to include the _id of the ConnectionRequest document
+        const safeData = connectionRequests.map((row) => ({
+            _id: row._id, // The ID of the connection request
+            ...row.fromUserId._doc // Spread the actual user data
+        }));
 
         
         res.json({

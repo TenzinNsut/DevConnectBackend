@@ -81,8 +81,8 @@ requestRouter.post("/request/review/:status/:requestId", userAuth, async (req, r
 
         // 2.) Check if requestId is valid 
         const isValidRequest = await ConnectionRequestModel.findOne({
-            _id: requestId, // i.) Should exist in DB
-            // fromUserId: requestId, // Removed this line as it was incorrect
+            // _id: requestId, // i.) Should exist in DB
+            fromUserId: requestId, // Removed this line as it was incorrect
             toUserId: loggedInUser._id, // ii.) toUserID == loggedInUser._id; Only "toUserId", should be able to accept/reject the request
             status: "interested", // iii.) status should be in "interested" state before "accepting/rejecting" request
             // Hardcoded "interested", so once changed, you would not be able to switch{accpeted,rejected}
