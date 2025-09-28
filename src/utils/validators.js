@@ -54,7 +54,8 @@ const userEmailValidator = [emailId];
 
 
 
-const loginValidator = [emailId, password];
+const loginPassword = body("password").notEmpty().withMessage("Password is required");
+const loginValidator = [emailId, loginPassword];
 const patchPasswordValidator = [emailId, password, newPassword];
 
 const allowedToUpdate = (req) => {

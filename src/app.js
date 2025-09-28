@@ -56,12 +56,18 @@ const Message = require('./models/message');
 
 const userSocketMap = {}; // { userId: socketId }
 
+// Export function to get userSocketMap
+const getUserSocketMap = () => userSocketMap;
+
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
     const userId = socket.handshake.query.userId;
     if (userId) {
         userSocketMap[userId] = socket.id;
         console.log(`User ${userId} is online.`);
+        
+        // Notify all other users that this user is online
+        socket.broadcast.emit('userOnline', userId);
     }
 
     socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
@@ -71,10 +77,14 @@ io.on('connection', (socket) => {
 
             const receiverSocketId = userSocketMap[receiverId];
             if (receiverSocketId) {
-                // Send the message to the specific receiver
+                // Send the message to the specific receiver if they're online
                 io.to(receiverSocketId).emit('receiveMessage', newMessage);
+            } else {
+                // Receiver is offline - message is saved to DB and will be fetched when they come online
+                console.log(`User ${receiverId} is offline. Message saved to database.`);
             }
-            // Also send the message back to the sender for their UI
+            
+            // Always send the message back to the sender for their UI
             socket.emit('receiveMessage', newMessage);
 
         } catch (error) {
@@ -88,6 +98,9 @@ io.on('connection', (socket) => {
             if (value === socket.id) {
                 delete userSocketMap[key];
                 console.log(`User ${key} is offline.`);
+                
+                // Notify all other users that this user is offline
+                socket.broadcast.emit('userOffline', key);
                 break;
             }
         }
@@ -114,4 +127,7 @@ connectDB().then(() => {
     })
 }).catch((err) => {
     console.error("DB connection failed! " + err);
-})
+});
+
+// Export the getUserSocketMap function
+module.exports = { getUserSocketMap };

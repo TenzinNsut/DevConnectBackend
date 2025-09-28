@@ -55,7 +55,7 @@ authRouter.post("/login", loginValidator, handleValidationErrors, async (req, re
             throw new Error("Invalid Credentials");
         }
     } catch (err) {
-        res.status(400).send("OOPS! " + err.message);
+        res.status(400).json({ message: "OOPS! " + err.message });
     }
 })
 

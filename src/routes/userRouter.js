@@ -87,6 +87,24 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
     }
 });
 
+// Get online users
+userRouter.get("/user/online-users", userAuth, async (req, res) => {
+    try {
+        // Import userSocketMap from app.js (we'll need to make it accessible)
+        const { getUserSocketMap } = require('../app');
+        const userSocketMap = getUserSocketMap();
+        
+        const onlineUserIds = Object.keys(userSocketMap);
+        
+        res.json({
+            message: "Online users retrieved successfully",
+            data: onlineUserIds,
+        });
+    } catch (error) {
+        res.status(400).json({ message: "Error: " + error.message });
+    }
+});
+
 
 userRouter.get("/user/feed", userAuth, async (req, res) => {
     try {
